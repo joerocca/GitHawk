@@ -17,18 +17,24 @@ final class IssueStatusCell: UICollectionViewCell, ListBindable {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        contentView.addSubview(button)
+        contentView.addSubview(lockedButton)
 
         button.setupAsLabel()
-        contentView.addSubview(button)
         button.snp.makeConstraints { make in
-            make.centerY.equalTo(contentView)
-            make.left.equalTo(Styles.Sizes.gutter)
+            if #available(iOS 11.0, *) {
+                make.centerY.equalTo(safeAreaLayoutGuide)
+                make.left.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.gutter)
+            } else {
+                make.centerY.equalTo(contentView)
+                make.left.equalTo(contentView).offset(Styles.Sizes.gutter)
+            }
         }
 
         lockedButton.setTitle(Strings.locked, for: .normal)
         lockedButton.config(pullRequest: false, state: .locked)
         lockedButton.setupAsLabel()
-        contentView.addSubview(lockedButton)
         lockedButton.snp.makeConstraints { make in
             make.centerY.equalTo(button)
             make.left.equalTo(button.snp.right).offset(Styles.Sizes.columnSpacing)
