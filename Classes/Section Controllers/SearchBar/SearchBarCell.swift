@@ -23,15 +23,22 @@ final class SearchBarCell: UICollectionViewCell, UISearchBarDelegate {
         super.init(frame: frame)
 
         contentView.backgroundColor = .white
+        
+        contentView.addSubview(searchBar)
 
         searchBar.searchBarStyle = .minimal
         searchBar.delegate = self
         searchBar.tintColor = Styles.Colors.Blue.medium.color
-        contentView.addSubview(searchBar)
         searchBar.snp.makeConstraints { make in
-            make.leading.equalTo(contentView)
-            make.trailing.equalTo(contentView)
-            make.centerY.equalTo(contentView)
+            if #available(iOS 11.0, *) {
+                make.left.equalTo(safeAreaLayoutGuide)
+                make.right.equalTo(safeAreaLayoutGuide)
+                make.centerY.equalTo(safeAreaLayoutGuide)
+            } else {
+                make.left.equalTo(contentView)
+                make.right.equalTo(contentView)
+                make.centerY.equalTo(contentView)
+            }
         }
     }
     
