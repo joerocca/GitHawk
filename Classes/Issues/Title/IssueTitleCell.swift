@@ -17,11 +17,16 @@ final class IssueTitleCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-
-        label.numberOfLines = 0
+        
         contentView.addSubview(label)
+        
+        label.numberOfLines = 0
         label.snp.makeConstraints { make in
-            make.edges.equalTo(contentView).inset(IssueTitleCell.inset)
+            if #available(iOS 11.0, *) {
+                make.edges.equalTo(safeAreaLayoutGuide).inset(IssueTitleCell.inset)
+            } else {
+                make.edges.equalTo(contentView).inset(IssueTitleCell.inset)
+            }
         }
     }
 
