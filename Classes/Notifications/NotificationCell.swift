@@ -29,14 +29,22 @@ final class NotificationCell: SwipeSelectableCell {
         isAccessibilityElement = true
 
         contentView.backgroundColor = .white
-
+        
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(dateLabel)
+        contentView.addSubview(reasonImageView)
+        contentView.addSubview(textLabel)
+        
         titleLabel.numberOfLines = 1
         titleLabel.font = Styles.Fonts.title
         titleLabel.textColor = Styles.Colors.Gray.light.color
-        contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(Styles.Sizes.rowSpacing)
-            make.left.equalTo(NotificationCell.labelInset.left)
+            make.left.equalTo(reasonImageView.snp.right).offset(Styles.Sizes.columnSpacing)
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.rowSpacing)
+            } else {
+                make.top.equalTo(contentView).offset(Styles.Sizes.rowSpacing)
+            }
         }
 
         dateLabel.backgroundColor = .clear
@@ -44,27 +52,38 @@ final class NotificationCell: SwipeSelectableCell {
         dateLabel.font = Styles.Fonts.secondary
         dateLabel.textColor = Styles.Colors.Gray.light.color
         dateLabel.textAlignment = .right
-        contentView.addSubview(dateLabel)
         dateLabel.snp.makeConstraints { make in
-            make.right.equalTo(-Styles.Sizes.gutter)
             make.centerY.equalTo(titleLabel)
-            make.left.equalTo(titleLabel.snp.right).offset(Styles.Sizes.gutter)
+            if #available(iOS 11.0, *) {
+                make.right.equalTo(safeAreaLayoutGuide).offset(-Styles.Sizes.gutter)
+            } else {
+                make.right.equalTo(contentView).offset(-Styles.Sizes.gutter)
+            }
         }
-
+        
         reasonImageView.backgroundColor = .clear
         reasonImageView.contentMode = .scaleAspectFit
         reasonImageView.tintColor = Styles.Colors.Blue.medium.color
-        contentView.addSubview(reasonImageView)
         reasonImageView.snp.makeConstraints { make in
             make.size.equalTo(Styles.Sizes.icon)
-            make.top.equalTo(NotificationCell.labelInset.top)
-            make.left.equalTo(Styles.Sizes.rowSpacing)
+            make.top.equalTo(textLabel)
+            if #available(iOS 11.0, *) {
+                make.left.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.rowSpacing)
+            } else {
+                make.left.equalTo(contentView).offset(Styles.Sizes.rowSpacing)
+            }
         }
 
         textLabel.numberOfLines = 0
-        contentView.addSubview(textLabel)
         textLabel.snp.makeConstraints { make in
-            make.edges.equalTo(contentView).inset(NotificationCell.labelInset)
+            make.left.equalTo(titleLabel)
+            make.right.equalTo(dateLabel)
+            make.top.equalTo(titleLabel.snp.bottom)
+            if #available(iOS 11.0, *) {
+                make.bottom.equalTo(safeAreaLayoutGuide).offset(-Styles.Sizes.rowSpacing)
+            } else {
+                make.bottom.equalTo(contentView).offset(-Styles.Sizes.rowSpacing)
+            }
         }
 
         contentView.addBorder(.bottom, left: NotificationCell.labelInset.left)
