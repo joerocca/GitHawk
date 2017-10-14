@@ -10,13 +10,6 @@ import UIKit
 import SnapKit
 
 final class SearchRepoResultCell: SelectableCell {
-
-    static let labelInset = UIEdgeInsets(
-        top: Styles.Fonts.title.lineHeight + Styles.Fonts.secondary.lineHeight + 3*Styles.Sizes.rowSpacing,
-        left: Styles.Sizes.gutter,
-        bottom: Styles.Sizes.rowSpacing,
-        right: Styles.Sizes.gutter
-    )
     
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
@@ -39,9 +32,14 @@ final class SearchRepoResultCell: SelectableCell {
 
         titleLabel.textColor = Styles.Colors.Gray.dark.color
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(Styles.Sizes.rowSpacing)
-            make.left.equalTo(SearchRepoResultCell.labelInset.left)
             make.right.lessThanOrEqualTo(languageColorView.snp.left).offset(-Styles.Sizes.rowSpacing)
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.rowSpacing)
+                make.left.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.gutter)
+            } else {
+                make.top.equalTo(contentView).offset(Styles.Sizes.rowSpacing)
+                make.left.equalTo(contentView).offset(Styles.Sizes.gutter)
+            }
         }
 
         // always collapse and truncate the title
@@ -51,8 +49,12 @@ final class SearchRepoResultCell: SelectableCell {
         languageLabel.font = Styles.Fonts.secondary
         languageLabel.textColor = Styles.Colors.Gray.light.color
         languageLabel.snp.makeConstraints { make in
-            make.right.equalTo(-Styles.Sizes.gutter)
             make.centerY.equalTo(titleLabel)
+            if #available(iOS 11.0, *) {
+                make.right.equalTo(safeAreaLayoutGuide).offset(-Styles.Sizes.gutter)
+            } else {
+                make.right.equalTo(contentView).offset(-Styles.Sizes.gutter)
+            }
         }
         
         let languageColorWidth: CGFloat = 8
@@ -67,7 +69,6 @@ final class SearchRepoResultCell: SelectableCell {
         starsLabel.font = Styles.Fonts.secondary
         starsLabel.textColor = Styles.Colors.Gray.light.color
         starsLabel.snp.makeConstraints { make in
-            make.right.equalTo(-Styles.Sizes.gutter)
             make.top.equalTo(titleLabel.snp.bottom).offset(Styles.Sizes.rowSpacing)
             make.right.equalTo(languageLabel)
         }
@@ -80,7 +81,7 @@ final class SearchRepoResultCell: SelectableCell {
             make.left.equalTo(titleLabel)
         }
         
-        addBorder(.bottom, left: SearchRepoResultCell.labelInset.left)
+        addBorder(.bottom, left: Styles.Sizes.gutter)
     }
     
     required init?(coder aDecoder: NSCoder) {
