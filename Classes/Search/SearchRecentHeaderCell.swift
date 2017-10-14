@@ -22,24 +22,34 @@ final class SearchRecentHeaderCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        contentView.addSubview(label)
+        contentView.addSubview(button)
 
         label.text = NSLocalizedString("Recent Searches", comment: "").uppercased(with: Locale.current)
         label.font = Styles.Fonts.secondary
         label.textColor = Styles.Colors.Gray.light.color
-        contentView.addSubview(label)
         label.snp.makeConstraints { make in
-            make.left.equalTo(Styles.Sizes.gutter)
-            make.centerY.equalTo(contentView)
+            if #available(iOS 11.0, *) {
+                make.centerY.equalTo(safeAreaLayoutGuide)
+                make.left.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.gutter)
+            } else {
+                make.centerY.equalTo(contentView)
+                make.left.equalTo(contentView).offset(Styles.Sizes.gutter)
+            }
         }
 
         button.setTitle(NSLocalizedString("Clear", comment: ""), for: .normal)
         button.setTitleColor(Styles.Colors.Blue.medium.color, for: .normal)
         button.titleLabel?.font = Styles.Fonts.button
         button.addTarget(self, action: #selector(SearchRecentHeaderCell.onClear), for: .touchUpInside)
-        contentView.addSubview(button)
         button.snp.makeConstraints { make in
-            make.right.equalTo(-Styles.Sizes.gutter)
             make.centerY.equalTo(label)
+            if #available(iOS 11.0, *) {
+                make.right.equalTo(safeAreaLayoutGuide).offset(-Styles.Sizes.gutter)
+            } else {
+                make.right.equalTo(contentView).offset(-Styles.Sizes.gutter)
+            }
         }
 
         addBorder(.bottom)
