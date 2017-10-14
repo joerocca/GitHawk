@@ -17,14 +17,21 @@ final class SearchRecentCell: SelectableCell {
         super.init(frame: frame)
 
         contentView.backgroundColor = .white
+        
+        contentView.addSubview(label)
 
         label.textColor = Styles.Colors.Gray.dark.color
         label.font = Styles.Fonts.body
-        contentView.addSubview(label)
         label.snp.makeConstraints { make in
-            make.centerY.equalTo(contentView)
-            make.left.equalTo(Styles.Sizes.gutter)
-            make.right.lessThanOrEqualTo(-Styles.Sizes.gutter)
+            if #available(iOS 11.0, *) {
+                make.centerY.equalTo(safeAreaLayoutGuide)
+                make.right.lessThanOrEqualTo(safeAreaLayoutGuide).offset(-Styles.Sizes.gutter)
+                make.left.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.gutter)
+            } else {
+                make.centerY.equalTo(contentView)
+                make.right.lessThanOrEqualTo(contentView).offset(-Styles.Sizes.gutter)
+                make.left.equalTo(contentView).offset(Styles.Sizes.gutter)
+            }
         }
 
         addBorder(.bottom, left: Styles.Sizes.gutter)
