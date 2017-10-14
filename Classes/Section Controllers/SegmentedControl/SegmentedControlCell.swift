@@ -23,14 +23,21 @@ final class SegmentedControlCell: UICollectionViewCell {
         super.init(frame: frame)
 
         contentView.backgroundColor = .white
+        
+        contentView.addSubview(segmentedControl)
 
         segmentedControl.addTarget(self, action: #selector(SegmentedControlCell.didSelect(sender:)), for: .valueChanged)
         segmentedControl.tintColor = Styles.Colors.Blue.medium.color
-        contentView.addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints { make in
-            make.left.equalTo(contentView).offset(Styles.Sizes.gutter)
-            make.right.equalTo(contentView).offset(-Styles.Sizes.gutter)
-            make.centerY.equalTo(contentView)
+            if #available(iOS 11.0, *) {
+                make.centerY.equalTo(safeAreaLayoutGuide)
+                make.left.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.gutter)
+                make.right.equalTo(safeAreaLayoutGuide).offset(-Styles.Sizes.gutter)
+            } else {
+                make.centerY.equalTo(contentView)
+                make.left.equalTo(contentView).offset(Styles.Sizes.gutter)
+                make.right.equalTo(contentView).offset(-Styles.Sizes.gutter)
+            }
         }
     }
     
