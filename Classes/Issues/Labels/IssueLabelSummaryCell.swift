@@ -30,22 +30,32 @@ final class IssueLabelSummaryCell: UICollectionViewCell, UICollectionViewDataSou
         super.init(frame: frame)
         accessibilityTraits |= UIAccessibilityTraitButton
         isAccessibilityElement = true
+        
+        contentView.addSubview(label)
+        contentView.addSubview(collectionView)
 
         label.font = Styles.Fonts.secondary
         label.textColor = Styles.Colors.Gray.light.color
-        contentView.addSubview(label)
         label.snp.makeConstraints { make in
-            make.centerY.equalTo(contentView)
-            make.left.equalTo(Styles.Sizes.gutter)
+            if #available(iOS 11.0, *) {
+                make.centerY.equalTo(safeAreaLayoutGuide)
+                make.left.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.gutter)
+            } else {
+                make.centerY.equalTo(contentView)
+                make.left.equalTo(contentView).offset(Styles.Sizes.gutter)
+            }
         }
 
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
         collectionView.isUserInteractionEnabled = false
-        contentView.addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
             make.left.equalTo(label.snp.right).offset(Styles.Sizes.columnSpacing)
-            make.top.bottom.right.equalTo(contentView)
+            if #available(iOS 11.0, *) {
+                make.top.bottom.right.equalTo(safeAreaLayoutGuide)
+            } else {
+                make.top.bottom.right.equalTo(contentView)
+            }
         }
     }
     
