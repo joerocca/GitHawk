@@ -17,18 +17,26 @@ final class IssueLabelCell: UICollectionViewCell, ListBindable {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        contentView.addSubview(background)
+        background.addSubview(label)
 
         background.layer.cornerRadius = Styles.Sizes.avatarCornerRadius
-        contentView.addSubview(background)
         background.snp.makeConstraints { make in
-            make.left.equalTo(Styles.Sizes.gutter)
-            make.right.equalTo(-Styles.Sizes.gutter)
-            make.top.equalTo(0)
-            make.bottom.equalTo(-Styles.Sizes.rowSpacing)
+            if #available(iOS 11.0, *) {
+                make.left.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.gutter)
+                make.right.equalTo(safeAreaLayoutGuide).offset(-Styles.Sizes.gutter)
+                make.top.equalTo(safeAreaLayoutGuide)
+                make.bottom.equalTo(safeAreaLayoutGuide).offset(-Styles.Sizes.rowSpacing)
+            } else {
+                make.left.equalTo(contentView).offset(Styles.Sizes.gutter)
+                make.right.equalTo(contentView).offset(-Styles.Sizes.gutter)
+                make.top.equalTo(contentView)
+                make.bottom.equalTo(contentView).offset(-Styles.Sizes.rowSpacing)
+            }
         }
 
         label.font = Styles.Fonts.smallTitle
-        background.addSubview(label)
         label.snp.makeConstraints { make in
             make.centerY.equalTo(background)
             make.left.equalTo(Styles.Sizes.columnSpacing)
