@@ -25,16 +25,23 @@ final class IssueLabeledCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        descriptionButton.addTarget(self, action: #selector(IssueLabeledCell.onActor), for: .touchUpInside)
         contentView.addSubview(descriptionButton)
+        contentView.addSubview(labelButton)
+        contentView.addSubview(dateLabel)
+        
+        descriptionButton.addTarget(self, action: #selector(IssueLabeledCell.onActor), for: .touchUpInside)
         descriptionButton.snp.makeConstraints { make in
-            make.left.equalTo(Styles.Sizes.eventGutter)
-            make.centerY.equalTo(contentView)
+            if #available(iOS 11.0, *) {
+                make.left.equalTo(safeAreaLayoutGuide).offset(Styles.Sizes.eventGutter)
+                make.centerY.equalTo(safeAreaLayoutGuide)
+            } else {
+                make.left.equalTo(Styles.Sizes.eventGutter)
+                make.centerY.equalTo(contentView)
+            }
         }
 
         labelButton.setupAsLabel(icon: false)
         labelButton.addTarget(self, action: #selector(IssueLabeledCell.onLabel), for: .touchUpInside)
-        contentView.addSubview(labelButton)
         labelButton.snp.makeConstraints { make in
             make.left.equalTo(descriptionButton.snp.right).offset(Styles.Sizes.inlineSpacing)
             make.centerY.equalTo(descriptionButton)
@@ -42,10 +49,9 @@ final class IssueLabeledCell: UICollectionViewCell {
 
         dateLabel.font = Styles.Fonts.secondary
         dateLabel.textColor = Styles.Colors.Gray.medium.color
-        contentView.addSubview(dateLabel)
         dateLabel.snp.makeConstraints { make in
             make.left.equalTo(labelButton.snp.right).offset(Styles.Sizes.inlineSpacing)
-            make.centerY.equalTo(contentView)
+            make.centerY.equalTo(labelButton)
         }
     }
 
